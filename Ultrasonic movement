@@ -1,0 +1,147 @@
+//The program show how to program the motor to turn left/
+#define motor_board_input_pin_IN1 9          //Connect to Arduino pin 9
+#define motor_board_input_pin_IN2 6      //Connect to Arduino pin 6
+#define motor_board_input_pin_IN3 5          //Connect to Arduino pin 5
+#define motor_board_input_pin_IN4 3      //Connect to Arduino pin 3
+
+#define TrigPin1 11   //ultrasonic
+#define EchoPin1 10   //ultrasonic
+#define TrigPin2 8    //ultrasonic
+#define EchoPin2 7    //ultrasonic
+
+int Distance;
+long pulseDuration;
+int Distance2;
+long pulseDuration2;
+
+
+void brake(void);
+void move_forward(void);
+void move_rev(void);
+void ultra_forward(void);
+void ultra_Backward(void);
+
+
+void setup() 
+{
+  Serial.begin(9600);
+  pinMode(TrigPin1,OUTPUT);
+  pinMode(EchoPin1,INPUT);
+  pinMode(TrigPin2,OUTPUT);
+  pinMode(EchoPin2,INPUT);
+
+  pinMode(motor_board_input_pin_IN2, OUTPUT); 
+  pinMode(motor_board_input_pin_IN1, OUTPUT); 
+  pinMode(motor_board_input_pin_IN4, OUTPUT); 
+  pinMode(motor_board_input_pin_IN3, OUTPUT); 
+}
+
+void loop() 
+{
+  
+  ultra_forward(); //move forward
+  ultra_Backward(); //move backward
+  run();
+  delay(200);
+
+}
+
+void move_forward() //move forward
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  digitalWrite(motor_board_input_pin_IN1, HIGH); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  digitalWrite(motor_board_input_pin_IN4, HIGH);// motor B higher reverse speed
+}
+
+void brake() //brake
+{
+  Serial.println("Brake");
+  digitalWrite(motor_board_input_pin_IN1, HIGH);
+  digitalWrite(motor_board_input_pin_IN2, HIGH);
+  digitalWrite(motor_board_input_pin_IN3, HIGH);
+  digitalWrite(motor_board_input_pin_IN4, HIGH);
+}
+
+void move_rev() //move in reverse
+{
+  digitalWrite(motor_board_input_pin_IN2, HIGH);
+  digitalWrite(motor_board_input_pin_IN1, LOW); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, HIGH);
+  digitalWrite(motor_board_input_pin_IN4, LOW);// motor B higher reverse speed
+}
+
+void Turn_left()
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  analogWrite(motor_board_input_pin_IN1, 90); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  analogWrite(motor_board_input_pin_IN4, 200);// motor B higher reverse speed
+
+}
+
+void Turn_right()
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  analogWrite(motor_board_input_pin_IN1, 200); //motor A higher forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  analogWrite(motor_board_input_pin_IN4, 90);// motor B lower reverse speed
+}
+
+
+void ultra_forward() //ultrasonic for front movement to avoid obstacle
+{
+
+  digitalWrite(TrigPin1,LOW);
+  delayMicroseconds(2);
+  digitalWrite(TrigPin1,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TrigPin1,LOW);
+
+  pulseDuration = pulseIn(EchoPin1, HIGH);
+  Distance = pulseDuration/58;
+  Serial.println("distance1 =");
+  Serial.println(Distance);
+  Serial.print("cm");
+  delay(100);
+
+}
+
+void ultra_Backward() //ultra sonic to move backwards to avoid obstacle while reversing
+{
+  digitalWrite(TrigPin2,LOW);
+  delayMicroseconds(2);
+  digitalWrite(TrigPin2,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TrigPin2,LOW);
+
+  pulseDuration2 = pulseIn(EchoPin2, HIGH);
+  Distance2 = pulseDuration2/58;
+
+  Serial.println("distance2 =");
+  Serial.println(Distance2);
+  Serial.print("cm");
+  delay(100);
+
+}
+
+
+void run()
+{
+
+  if (Distance <= 100 && Distance2 >= 100)
+  {
+    move_rev();
+  }
+  else if (Distance <= 100 && Distance2 <=100 ) 
+  {
+    brake(); // Stop if obstacle detected while reversing
+    delay(200);
+    Turn_left();
+  }
+  else
+  {
+    move_forward();
+  }
+}
+
