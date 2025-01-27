@@ -1,1 +1,106 @@
+#define motor_board_input_pin_IN1 9          //Connect to Arduino pin 9
+#define motor_board_input_pin_IN2 6      //Connect to Arduino pin 6
+#define motor_board_input_pin_IN3 5          //Connect to Arduino pin 5
+#define motor_board_input_pin_IN4 3      //Connect to Arduino pin 3
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+#define TrigPin1 11   // U/S1 Trig connected to pin 11
+#define EchoPin1 10   // U/S1 Echo connected to pin 10
+#define TrigPin2 8   // U/S2 Trig connected to pin 8
+#define EchoPin2 7   // U/S2 Echo connected to pin 7
+
+int getDistance(int EchoPin, int TrigPin);
+void move_forward(int delay1);
+void brake(int delay2);
+void move_rev(int delay3);
+void Turn_left(int delay4);
+void Turn_right(int delay5);
+
+void setup() {
+  // this setup code runs once only:
+  Serial.begin(9600);
+  pinMode(TrigPin1, OUTPUT);  //Set TrigPin1 as output
+  pinMode(EchoPin1, INPUT);   //Set EchoPin1 as input
+  pinMode(TrigPin2, OUTPUT);  //Set TrigPin2 as output
+  pinMode(EchoPin2, INPUT);   //Set EchoPin2 as input
+  pinMode(motor_board_input_pin_IN2, OUTPUT); 
+  pinMode(motor_board_input_pin_IN1, OUTPUT); 
+  pinMode(motor_board_input_pin_IN4, OUTPUT); 
+  pinMode(motor_board_input_pin_IN3, OUTPUT); 
+  lcd.init();
+  lcd.setCursor(0,0);
+  lcd.begin(16, 2);
+  lcd.backlight();
+}
+
+void loop() {
+  int Distance1, Distance2;                    // Ultrasound distances in cm
+  Distance1 = getDistance(EchoPin1,TrigPin1);
+  Distance2 = getDistance(EchoPin2,TrigPin2);  // display the obstacle distance in serial monitor
+
+}
+
+int getDistance(int EchoPin, int TrigPin)
+{
+  int distance;
+  long pulseDuration; //variable needed by the ultrasound sensor code
+  // 1. Produce a 10 us (micro-second) HIGH pulse to trigger the sensor...
+  digitalWrite(TrigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TrigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TrigPin, LOW);
+
+  pulseDuration = pulseIn(EchoPin, HIGH);
+  distance = pulseDuration / 58;  //  Convert to cm
+  
+  return distance;
+}
+
+void move_forward(int delay1) //move forward
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  digitalWrite(motor_board_input_pin_IN1, HIGH); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  digitalWrite(motor_board_input_pin_IN4, HIGH);// motor B higher reverse speed
+  delay(delay1);
+}
+
+void brake(int delay2) //brake
+{
+  Serial.println("Brake");
+  digitalWrite(motor_board_input_pin_IN1, HIGH);
+  digitalWrite(motor_board_input_pin_IN2, HIGH);
+  digitalWrite(motor_board_input_pin_IN3, HIGH);
+  digitalWrite(motor_board_input_pin_IN4, HIGH);
+  delay(delay2);
+}
+
+void move_rev(int delay3) //move in reverse
+{
+  digitalWrite(motor_board_input_pin_IN2, HIGH);
+  digitalWrite(motor_board_input_pin_IN1, LOW); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, HIGH);
+  digitalWrite(motor_board_input_pin_IN4, LOW);// motor B higher reverse speed
+  delay(delay3);
+}
+
+void Turn_left(int delay4)
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  analogWrite(motor_board_input_pin_IN1, 90); //motor A lower forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  analogWrite(motor_board_input_pin_IN4, 200);// motor B higher reverse speed
+  delay(delay4);
+}
+
+void Turn_right(int delay5)
+{
+  digitalWrite(motor_board_input_pin_IN2, LOW);
+  analogWrite(motor_board_input_pin_IN1, 200); //motor A higher forward speed
+  digitalWrite(motor_board_input_pin_IN3, LOW);
+  analogWrite(motor_board_input_pin_IN4, 90);// motor B lower reverse speed
+  delay(delay5);
+}
