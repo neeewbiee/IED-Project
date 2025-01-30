@@ -1,0 +1,68 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+#define TargetA 2
+#define TargetB 4
+
+int counterA = 0;
+int counterB = 0;
+
+void setup() {
+    Serial.begin(9600);
+    
+    pinMode(TargetA, INPUT_PULLUP);
+    pinMode(TargetB, INPUT_PULLUP);
+    
+    PCICR |= B00000100;    // Enable interrupts on PD port
+    PCMSK2 |= B00010100;   // Trigger interrupts on pins D2 and D4
+    
+    lcd.init();
+    lcd.begin(16, 2);
+    lcd.backlight();
+    lcd.clear();
+}
+
+void loop() {
+    lcd.setCursor(0, 0);
+    lcd.print("A score is:");
+    lcd.print(counterA);
+    
+    if (counterA == 4) {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("A is winner");
+        lcd.setCursor(0, 1);
+        lcd.print("Reset to restart");
+        noInterrupts();
+    }
+    
+    lcd.setCursor(0, 1);
+    lcd.print("B score is:");
+    lcd.print(counterB);
+    
+    delay(100);
+    
+    if (counterB == 4) {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("B is winner");
+        lcd.setCursor(0, 1);
+        lcd.print("Reset to restart");
+        noInterrupts();
+    }
+
+    while ((!digitalRead(2)) && (!digitalRead(4))) {
+        delay(500);
+    }
+}
+
+ISR (PCINT2_vect) {
+    if (!digitalRead(2)) {
+        counterA++;
+    } 
+    else if (!digitalRead(4)) {
+        counterB++;
+    }
+}
