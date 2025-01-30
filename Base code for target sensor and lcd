@@ -4,7 +4,7 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #define TargetA 2 //Target senssor 1
-#define TargetB 4 //Target sensor 1
+#define TargetB 4 //Target sensor 2
 
 
 int counterA = 0;
