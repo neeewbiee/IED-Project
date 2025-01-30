@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd (0x27,16,2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #define motor_board_input_pin_IN1 9  //Connect to Arduino pin 9
 #define motor_board_input_pin_IN2 6  //Connect to Arduino pin 6
@@ -22,6 +22,11 @@ void Turn_left(void);
 int Ultrasonic1(int EchoPin, int TrigPin);
 int Ultrasonic2(int EchoPin, int TrigPin);
 int MoistureSensor(void);
+void TargetBoardA(void);
+void TargetBoardB(void);
+
+int counterA = 0;
+int counterB = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -36,9 +41,13 @@ void setup() {
   pinMode(EchoPin2, INPUT);
 
   lcd.init();
-  lcd.begin(16,2);
+  lcd.begin(16, 2);
   lcd.backlight();
 
+  pinMode(2, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+  PCICR |= B00000100;
+  PCMSK2 |= B00010100;
 }
 
 void loop() {
@@ -52,11 +61,11 @@ void loop() {
   Serial.print(Distance2);
 
   int moisture = MoistureSensor();
-  lcd.setCursor(0,0);
+  lcd.setCursor(0, 0);
   lcd.backlight();
   lcd.print("Moisture %");
   delay(100);
-  lcd.setCursor(0,1);
+  lcd.setCursor(0, 1);
   lcd.backlight();
   lcd.print(moisture);
   Serial.print(" Moisture Percentage = ");
@@ -167,4 +176,35 @@ int MoistureSensor() {
   moisture_percentage = (100 - ((sensor_analog / 1023.00) * 100));
 
   return moisture_percentage;
+}
+
+void TargetBoardA() {
+  Serial.print("A score is:");
+  Serial.print(counterA);
+  //must reset after 3 for 3 diff modes(moisture,temp,light)
+  if (counterA==0){
+    //no light
+  }
+  else if (counterA==1){
+    //light
+  }
+}
+
+void TargetBoardB() {
+  Serial.print("B score is:");
+  Serial.print(counterB);
+  //must reset after 3 for 3 diff modes(moisture,temp,light)
+  if (counterB==0){
+    // moisture
+  }
+  else if (counterB==1){
+    //temp
+  }
+}
+
+ISR(PCINT2_vect) {
+  if (!digitalRead(2))
+    counterA++;
+  else if (!digitalRead(4))
+    counterB++;
 }
