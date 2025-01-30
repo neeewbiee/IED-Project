@@ -72,11 +72,9 @@ void loop() {
 
   int moisture = MoistureSensor();
   lcd.setCursor(0, 0);
-  lcd.backlight();
   lcd.print("Moisture %");
   delay(100);
   lcd.setCursor(0, 1);
-  lcd.backlight();
   lcd.print(moisture);
   Serial.print(" Moisture Percentage = ");
   Serial.print(moisture);
@@ -206,8 +204,10 @@ void TargetBoardB() {
   //must reset after 3 for 3 diff modes(moisture,temp,light)
   if (counterB == 0) {
     // moisture
+    MoistureSensor();
   } else if (counterB == 1) {
     //temp
+    dht11();
   }
 }
 
@@ -226,7 +226,7 @@ void dht11() {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
-  Serial.print(F("%  Temperature: "));
+  Serial.print(F(" Temperature: "));
   Serial.print(t);
   Serial.print(F("°C "));
 }
