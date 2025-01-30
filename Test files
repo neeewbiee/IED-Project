@@ -2,6 +2,11 @@
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+#include "DHT.h"
+#define DHTPIN A1
+#define DHTTYPE DHT11   // DHT 11
+DHT dht(A1, DHT11);
+
 #define motor_board_input_pin_IN1 9  //Connect to Arduino pin 9
 #define motor_board_input_pin_IN2 6  //Connect to Arduino pin 6
 #define motor_board_input_pin_IN3 5  //Connect to Arduino pin 5
@@ -24,6 +29,7 @@ int Ultrasonic2(int EchoPin, int TrigPin);
 int MoistureSensor(void);
 void TargetBoardA(void);
 void TargetBoardB(void);
+void dht11(void);
 
 int counterA = 0;
 int counterB = 0;
@@ -48,6 +54,8 @@ void setup() {
   pinMode(4, INPUT_PULLUP);
   PCICR |= B00000100;
   PCMSK2 |= B00010100;
+
+  dht.begin();
 }
 
 void loop() {
@@ -207,4 +215,17 @@ ISR(PCINT2_vect) {
     counterA++;
   else if (!digitalRead(4))
     counterB++;
+}
+
+void dht11(){
+  delay(100);// Wait a few seconds between measurements.
+  float t = dht.readTemperature();
+
+  if (isnan(t)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
+  Serial.print(F("%  Temperature: "));
+  Serial.print(t);
+  Serial.print(F("°C "));
 }
