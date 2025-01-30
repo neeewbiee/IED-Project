@@ -4,7 +4,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #include "DHT.h"
 #define DHTPIN A1
-#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT11  // DHT 11
 DHT dht(A1, DHT11);
 
 #define motor_board_input_pin_IN1 9  //Connect to Arduino pin 9
@@ -68,6 +68,8 @@ void loop() {
   Serial.print(" Distance 2 = ");
   Serial.print(Distance2);
 
+  dht11();
+
   int moisture = MoistureSensor();
   lcd.setCursor(0, 0);
   lcd.backlight();
@@ -79,6 +81,7 @@ void loop() {
   Serial.print(" Moisture Percentage = ");
   Serial.print(moisture);
   Serial.println();
+
 
   /*if (Distance1 < 100) {
     brake();
@@ -190,10 +193,9 @@ void TargetBoardA() {
   Serial.print("A score is:");
   Serial.print(counterA);
   //must reset after 3 for 3 diff modes(moisture,temp,light)
-  if (counterA==0){
+  if (counterA == 0) {
     //no light
-  }
-  else if (counterA==1){
+  } else if (counterA == 1) {
     //light
   }
 }
@@ -202,10 +204,9 @@ void TargetBoardB() {
   Serial.print("B score is:");
   Serial.print(counterB);
   //must reset after 3 for 3 diff modes(moisture,temp,light)
-  if (counterB==0){
+  if (counterB == 0) {
     // moisture
-  }
-  else if (counterB==1){
+  } else if (counterB == 1) {
     //temp
   }
 }
@@ -217,8 +218,8 @@ ISR(PCINT2_vect) {
     counterB++;
 }
 
-void dht11(){
-  delay(100);// Wait a few seconds between measurements.
+void dht11() {
+  delay(100);  // Wait a few seconds between measurements.
   float t = dht.readTemperature();
 
   if (isnan(t)) {
