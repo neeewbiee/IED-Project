@@ -3,8 +3,9 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-#define TargetA 2
-#define TargetB 4
+#define TargetA 2 //Target senssor 1
+#define TargetB 4 //Target sensor 1
+
 
 int counterA = 0;
 int counterB = 0;
@@ -53,16 +54,16 @@ void loop() {
         noInterrupts();
     }
 
-    while ((!digitalRead(2)) && (!digitalRead(4))) {
+    while ((!digitalRead(TargetA)) && (!digitalRead(TargetB))) {
         delay(500);
     }
 }
 
 ISR (PCINT2_vect) {
-    if (!digitalRead(2)) {
+    if (!digitalRead(TargetA)) {
         counterA++;
     } 
-    else if (!digitalRead(4)) {
+    else if (!digitalRead(TargetB)) {
         counterB++;
     }
 }
