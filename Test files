@@ -8,6 +8,8 @@
 #define TrigPin2 8
 #define EchoPin2 7
 
+#define moisture_sensor A0
+
 void brake(void);
 void move_forward(void);
 void move_rev(void);
@@ -15,18 +17,19 @@ void Turn_right(void);
 void Turn_left(void);
 int Ultrasonic1(int EchoPin, int TrigPin);
 int Ultrasonic2(int EchoPin, int TrigPin);
+int MoistureSensor(void);
 
 void setup() {
   Serial.begin(9600);
-  pinMode(motor_board_input_pin_IN1,OUTPUT);
-  pinMode(motor_board_input_pin_IN2,OUTPUT);
-  pinMode(motor_board_input_pin_IN3,OUTPUT);
-  pinMode(motor_board_input_pin_IN4,OUTPUT);
+  pinMode(motor_board_input_pin_IN1, OUTPUT);
+  pinMode(motor_board_input_pin_IN2, OUTPUT);
+  pinMode(motor_board_input_pin_IN3, OUTPUT);
+  pinMode(motor_board_input_pin_IN4, OUTPUT);
 
-  pinMode(TrigPin1,OUTPUT);
-  pinMode(EchoPin1,INPUT);
-  pinMode(TrigPin2,OUTPUT);
-  pinMode(EchoPin2,INPUT);
+  pinMode(TrigPin1, OUTPUT);
+  pinMode(EchoPin1, INPUT);
+  pinMode(TrigPin2, OUTPUT);
+  pinMode(EchoPin2, INPUT);
 }
 
 void loop() {
@@ -39,23 +42,32 @@ void loop() {
   Serial.print(" Distance 2 = ");
   Serial.print(Distance2);
 
-  if (Distance1<100){
+  int moisture = MoistureSensor();
+  Serial.print(" Moisture Percentage = ");
+  Serial.print(moisture);
+  Serial.println();
+
+  if (Distance1 < 100) {
     brake();
     move_rev();
     Turn_left();
-  }
-  else if (Distance2<100){
+  } 
+  else if (Distance2 < 100) {
     brake();
     move_rev();
     Turn_left();
-  }
-  else if (Distance1<100 && Distance2<100){
+  } 
+  else if (Distance1 < 100 && Distance2 < 100) {
     brake();
+    Turn_right();
+  } 
+  else if (moisture<20){
     Turn_right();
   }
   else {
     move_forward();
   }
+
 
   delay(100);
 }
@@ -84,54 +96,59 @@ void move_rev() {
   delay(1000);
 }
 
-void Turn_left()
-{
+void Turn_left() {
   digitalWrite(motor_board_input_pin_IN2, LOW);
-  analogWrite(motor_board_input_pin_IN1, 90); //motor A lower forward speed
+  analogWrite(motor_board_input_pin_IN1, 90);  //motor A lower forward speed
   digitalWrite(motor_board_input_pin_IN3, LOW);
-  analogWrite(motor_board_input_pin_IN4, 200);// motor B higher reverse speed
+  analogWrite(motor_board_input_pin_IN4, 200);  // motor B higher reverse speed
   delay(1000);
 }
 
-void Turn_right()
-{
+void Turn_right() {
   digitalWrite(motor_board_input_pin_IN2, LOW);
-  analogWrite(motor_board_input_pin_IN1, 200); //motor A higher forward speed
+  analogWrite(motor_board_input_pin_IN1, 200);  //motor A higher forward speed
   digitalWrite(motor_board_input_pin_IN3, LOW);
-  analogWrite(motor_board_input_pin_IN4, 90);// motor B lower reverse speed
+  analogWrite(motor_board_input_pin_IN4, 90);  // motor B lower reverse speed
   delay(1000);
 }
 
-int Ultrasonic1(int EchoPin, int TrigPin){
+int Ultrasonic1(int EchoPin, int TrigPin) {
   int Distance;
   long pulseDuration;
 
-  digitalWrite(TrigPin1,LOW);
+  digitalWrite(TrigPin1, LOW);
   delayMicroseconds(2);
-  digitalWrite(TrigPin1,HIGH);
+  digitalWrite(TrigPin1, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TrigPin1,LOW);
+  digitalWrite(TrigPin1, LOW);
 
-  pulseDuration = pulseIn(EchoPin1,HIGH);
-  Distance = pulseDuration/58;
+  pulseDuration = pulseIn(EchoPin1, HIGH);
+  Distance = pulseDuration / 58;
 
   return Distance;
-
 }
 
-int Ultrasonic2(int EchoPin, int TrigPin){
+int Ultrasonic2(int EchoPin, int TrigPin) {
   int Distance;
   long pulseDuration;
 
-  digitalWrite(TrigPin2,LOW);
+  digitalWrite(TrigPin2, LOW);
   delayMicroseconds(2);
-  digitalWrite(TrigPin2,HIGH);
+  digitalWrite(TrigPin2, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TrigPin2,LOW);
+  digitalWrite(TrigPin2, LOW);
 
-  pulseDuration = pulseIn(EchoPin2,HIGH);
-  Distance = pulseDuration/58;
+  pulseDuration = pulseIn(EchoPin2, HIGH);
+  Distance = pulseDuration / 58;
 
   return Distance;
+}
 
+int MoistureSensor() {
+  float moisture_percentage;
+  int sensor_analog;
+  sensor_analog = analogRead(moisture_sensor);
+  moisture_percentage = (100 - ((sensor_analog / 1023.00) * 100));
+
+  return moisture_percentage;
 }
