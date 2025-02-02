@@ -28,15 +28,8 @@ void loop() {
     lcd.print(counterA);  // Show the value of counterA (for debugging)
 
     delay(100);  // Delay to reduce flicker
-
-    if (counterA == 2) {  // Check if the counter reaches 2
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("There is no Light");
-        lcd.setCursor(0, 1);
-        lcd.print("Waiting for reset");
-        noInterrupts();  // Disable interrupts temporarily
-    }
+    Target_SensorA();
+  
 
     // If sensor is hit again, reset the counter
     while (!digitalRead(TargetA)) {
@@ -46,7 +39,7 @@ void loop() {
 
     // After laser is detected, reset counterA and show the message
     if (counterA == 2) {
-        resetCounterA();  // Call reset function
+        counterA = 0;  // Reset counterA to 0
     }
 }
 
@@ -59,13 +52,13 @@ ISR(PCINT2_vect) {  // Interrupt service routine for pin change interrupt
 
 // Function to update the LCD when TargetA is hit
 void Target_SensorA() {
-    if (counterA == 1) {
+    if (counterA == 0) {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("There is Light");
         lcd.setCursor(0, 1);
     }
-    else if (counterA == 2) {
+    else if (counterA > 0) {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("There is no Light");
@@ -74,8 +67,3 @@ void Target_SensorA() {
     }
 }
 
-// Function to reset counterA when the laser is hit again
-void resetCounterA() {
-    counterA = 0;  // Reset counterA to 0
-    Target_SensorA();  // Update the LCD display
-}
