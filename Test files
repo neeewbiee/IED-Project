@@ -29,7 +29,7 @@ int Ultrasonic2(int EchoPin, int TrigPin);
 int MoistureSensor(void);
 void TargetBoardA(void);
 void TargetBoardB(void);
-void dht11(void);
+int dht11(void);
 
 int counterA = 0;
 int counterB = 0;
@@ -67,20 +67,8 @@ void loop() {
   Serial.print(Distance1);
   Serial.print(" Distance 2 = ");
   Serial.print(Distance2);
-
-  dht11();
-
-  int moisture = MoistureSensor();
-  lcd.setCursor(0, 0);
-  lcd.print("Moisture %");
-  delay(100);
-  lcd.setCursor(0, 1);
-  lcd.print(moisture);
-  Serial.print(" Moisture Percentage = ");
-  Serial.print(moisture);
-  Serial.println();
-
-
+  TargetBoardB();
+  // Maybe can make into a function for movement
   /*if (Distance1 < 100) {
     brake();
     move_rev();
@@ -193,21 +181,49 @@ void TargetBoardA() {
   //must reset after 3 for 3 diff modes(moisture,temp,light)
   if (counterA == 0) {
     //no light
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(" No Light");
   } else if (counterA == 1) {
     //light
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Light");
+  } else if (counterA >= 2) {
+    counterA = 0;
   }
 }
 
 void TargetBoardB() {
-  Serial.print("B score is:");
-  Serial.print(counterB);
   //must reset after 3 for 3 diff modes(moisture,temp,light)
   if (counterB == 0) {
     // moisture
-    MoistureSensor();
+    int moisture = MoistureSensor();
+    lcd.setCursor(0, 0);
+    lcd.print("Moisture %");
+    delay(100);
+    lcd.setCursor(0, 1);
+    lcd.print(moisture);
+    Serial.print(" Moisture Percentage = ");
+    Serial.print(moisture);
+    Serial.println();
   } else if (counterB == 1) {
     //temp
-    dht11();
+    int temp = dht11();
+    lcd.setCursor(0, 0);
+    lcd.print("Temperature");
+    delay(100);
+    lcd.setCursor(0, 1);
+    lcd.print(temp);
+    Serial.print(" Temp = ");
+    Serial.print(temp);
+    Serial.println();
+  } else if (counterB == 2) {
+    //show sunlight
+    TargetBoardA();
+  } else if (counterB >= 3) {
+    lcd.clear();
+    counterB = 0;
   }
 }
 
@@ -218,7 +234,7 @@ ISR(PCINT2_vect) {
     counterB++;
 }
 
-void dht11() {
+int dht11() {
   delay(100);  // Wait a few seconds between measurements.
   float t = dht.readTemperature();
 
@@ -229,4 +245,6 @@ void dht11() {
   Serial.print(F(" Temperature: "));
   Serial.print(t);
   Serial.print(F("°C "));
+
+  return t;
 }
