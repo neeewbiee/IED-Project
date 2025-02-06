@@ -63,7 +63,7 @@ void setup() {
 void loop() {
   int Distance1 = Ultrasonic1(EchoPin1, TrigPin1);
   int Distance2 = Ultrasonic2(EchoPin2, TrigPin2);
-  //movement(Distance1, Distance2);
+  movement(Distance1, Distance2);
   TargetBoardB();
   
 }
