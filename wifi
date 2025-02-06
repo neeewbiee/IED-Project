@@ -7,6 +7,7 @@ String myAPI = "RVSOV8JO6WPBUQHQ";   // API Key
 String myHOST = "api.thingspeak.com";
 String myPORT = "80";
 String myFIELD = "field1"; 
+String myFIELD2 = "field2";
 
 #include "DHT.h"
 #define DHTPIN A1
@@ -22,27 +23,20 @@ void setup()
   espData("AT+RST", 1000, DEBUG);                      //Reset the ESP8266 module
   espData("AT+CWMODE=1", 1000, DEBUG);                 //Set the ESP mode as station mode
   espData("AT+CWJAP=\""+ mySSID +"\",\""+ myPWD +"\"", 1000, DEBUG);   //Connect to WiFi network
-  /*while(!esp.find("OK")) 
-  {          
-      //Wait for connection
-  }*/
-  delay(1000);
   dht.begin();
 }
 
   void loop()
   {
     int temp = dht11();
-    String sendData = "GET /update?api_key="+ myAPI +"&"+ myFIELD +"="+String(temp);
+    int moisture = MoistureSensor();
+    String sendData = "GET /update?api_key="+ myAPI +"&"+ myFIELD +"="+String(temp)+"&"+ myFIELD2 +"="+String(moisture);
     espData("AT+CIPMUX=1", 1000, DEBUG);       //Allow multiple connections
     espData("AT+CIPSTART=0,\"TCP\",\""+ myHOST +"\","+ myPORT, 1000, DEBUG);
     espData("AT+CIPSEND=0," +String(sendData.length()+4),1000,DEBUG);  
     espSerial.find(">"); 
     espSerial.println(sendData);  
-    Serial.print("Value to be sent: ");
-    Serial.println(sendVal);
     espData("AT+CIPCLOSE=0",1000,DEBUG);
-    delay(1000);
   } 
 
 int dht11() {
@@ -55,6 +49,16 @@ int dht11() {
   }
   return t;
 }
+
+int MoistureSensor() {
+  float moisture_percentage;
+  int sensor_analog;
+  sensor_analog = analogRead(moisture_sensor);
+  moisture_percentage = (100 - ((sensor_analog / 1023.00) * 100));
+
+  return moisture_percentage;
+}
+
 String espData(String command, const int timeout, boolean debug)
 {
   Serial.print("AT Command ==> ");
