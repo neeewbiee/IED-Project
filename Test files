@@ -62,12 +62,13 @@ void loop() {
 
   int Distance1 = Ultrasonic1(EchoPin1, TrigPin1);
   int Distance2 = Ultrasonic2(EchoPin2, TrigPin2);
-  Serial.println();
+ // Serial.println();
   Serial.print("Distance 1 = ");
   Serial.print(Distance1);
   Serial.print(" Distance 2 = ");
   Serial.print(Distance2);
   TargetBoardB();
+  
   // Maybe can make into a function for movement
   /*if (Distance1 < 100) {
     brake();
@@ -83,9 +84,6 @@ void loop() {
     brake();
     Turn_right();
   } 
-  else if (moisture<20){
-    Turn_right();
-  }
   else {
     move_forward();
   }*/
@@ -178,19 +176,19 @@ int MoistureSensor() {
 void TargetBoardA() {
   Serial.print("A score is:");
   Serial.print(counterA);
+  lcd.clear();
   //must reset after 3 for 3 diff modes(moisture,temp,light)
   if (counterA == 0) {
     //no light
-    lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(" No Light");
   } else if (counterA == 1) {
     //light
-    lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Light");
   } else if (counterA >= 2) {
     counterA = 0;
+    lcd.clear();
   }
 }
 
@@ -228,9 +226,9 @@ void TargetBoardB() {
 }
 
 ISR(PCINT2_vect) {
-  if (!digitalRead(2))
+  if (!digitalRead(4))
     counterA++;
-  else if (!digitalRead(4))
+  else if (!digitalRead(2))
     counterB++;
 }
 
