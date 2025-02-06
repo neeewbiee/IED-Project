@@ -39,6 +39,8 @@ void setup()
     espData("AT+CIPSEND=0," +String(sendData.length()+4),1000,DEBUG);  
     espSerial.find(">"); 
     espSerial.println(sendData);  
+    Serial.print("Value to be sent: ");
+    Serial.println(sendVal);
     espData("AT+CIPCLOSE=0",1000,DEBUG);
     delay(1000);
   } 
