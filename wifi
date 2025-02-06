@@ -26,6 +26,8 @@ void setup()
   {
     int temp = dht11();
     espSerial.println(temp);
+    ESP.restart();
+    delay(1000);
   } 
 
 int dht11() {
