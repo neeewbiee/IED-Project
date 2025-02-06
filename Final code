@@ -155,10 +155,12 @@ void TargetBoardA() {
   //must reset after 3 for 3 diff modes(moisture,temp,light)
   if (counterA == 0) {
     //no light
+    lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(" No Light");
   } else if (counterA == 1) {
     //light
+    lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Light");
     brake();
