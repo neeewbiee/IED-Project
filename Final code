@@ -196,9 +196,9 @@ void TargetBoardB() {
 }
 
 ISR(PCINT2_vect) {
-  if (!digitalRead(2))
+  if (!digitalRead(4))
     counterA++;
-  else if (!digitalRead(4))
+  else if (!digitalRead(2))
     counterB++;
 }
 
