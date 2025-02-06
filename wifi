@@ -17,5 +17,5 @@ void setup()
 
   void loop()
   {
-    espSerial.println(200);
+    espSerial.println();
   } 
