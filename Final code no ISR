@@ -212,7 +212,10 @@ void TargetBoardB() {
 }
 
 TargetBoards() {
-  digital.
+  if (!digitalRead(4))
+    counterA++;
+  else if (!digitalRead(2))
+    counterB++;
 }
 
 int dht11() {
