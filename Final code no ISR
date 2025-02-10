@@ -30,6 +30,9 @@ DHT dht(A1, DHT11);
 
 #define moisture_sensor A0
 
+#define TargetA 2
+#define TargetB 4
+
 void brake(void);
 void move_forward(void);
 void move_rev(void);
@@ -64,8 +67,8 @@ void setup() {
   lcd.begin(16, 2);
   lcd.backlight();
 
-  pinMode(2, INPUT_PULLUP);
-  pinMode(4, INPUT_PULLUP);
+  pinMode(TargetA, INPUT_PULLUP);
+  pinMode(TargetB, INPUT_PULLUP);
 
   dht.begin();
 
