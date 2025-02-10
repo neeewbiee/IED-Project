@@ -27,8 +27,11 @@ Serial.print("B");
 void targetboards(int targetboardA, int targetboardB){
   if (targetboardA == 0){
     counterA++;
+while (targetboardA == 1)
   }
   if (targetboardB == 0){
     counterB++;
+while (targetboardB)
   }
+
 }
