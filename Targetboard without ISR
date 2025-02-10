@@ -1,4 +1,3 @@
-#define TargetBoard
 
 int counterA = 0;
 int counterB = 0;
