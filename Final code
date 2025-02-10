@@ -65,7 +65,7 @@ void loop() {
   int Distance2 = Ultrasonic2(EchoPin2, TrigPin2);
   movement(Distance1, Distance2);
   TargetBoardB();
-  
+  delay(100); 
 }
 
 void move_forward() {
@@ -81,7 +81,7 @@ void brake() {
   digitalWrite(motor_board_input_pin_IN2, HIGH);
   digitalWrite(motor_board_input_pin_IN3, HIGH);
   digitalWrite(motor_board_input_pin_IN4, HIGH);
-  delay(500);
+  delay(200);
 }
 
 void move_rev() {
@@ -223,7 +223,7 @@ void movement(int Distance1, int Distance2) {
       Turn_left();
   } else if (Distance2 < 50) {
       brake();
-      move_rev();
+      move_forward();
       Turn_left();
   } else if (Distance1 < 50 && Distance2 < 50) {
       brake();
