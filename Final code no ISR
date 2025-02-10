@@ -213,7 +213,7 @@ void TargetBoardB() {
   }
 }
 
-TargetBoards() {
+void TargetBoards() {
   if (!digitalRead(4))
     counterA++;
   else if (!digitalRead(2))
