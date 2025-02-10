@@ -18,13 +18,13 @@ void loop(){
   targetboards(targetboardA, targetboardB);
 if (counterA == 2){
 Serial.print("A");
-} else if(counterA == 3){
+} else if(counterA >= 3){
 counterA == 0;
 }
 
 if (counterB == 2) {
 Serial.print("B");
-} else if(counterB == 3){
+} else if(counterB >= 3){
 counterB == 0;
 }
 
