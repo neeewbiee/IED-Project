@@ -1,1 +1,34 @@
+#define TargetBoard
 
+int counterA = 0;
+int counterB = 0;
+
+void targetboards(int targetboardA, int targetboardB);
+
+void setup(){
+  pinMode(2, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+}
+
+void loop(){
+  int targetboardA = digitalRead(2);
+  int targetboardB = digitalRead(4);
+  targetboards(targetboardA, targetboardB);
+if (counterA == 2){
+Serial.print("A");
+}
+if (counterB == 2) {
+Serial.print("B");
+}
+  Serial.print(counterA);
+  Serial.print(counterB);
+}
+
+void targetboards(int targetboardA, int targetboardB){
+  if (targetboardA == 0){
+    counterA++;
+  }
+  if (targetboardB == 0){
+    counterB++;
+  }
+}
