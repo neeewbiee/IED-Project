@@ -19,13 +19,13 @@ void loop(){
 if (counterA == 2){
 Serial.print("A");
 } else if(counterA >= 3){
-counterA == 0;
+counterA = 0;
 }
 
 if (counterB == 2) {
 Serial.print("B");
 } else if(counterB >= 3){
-counterB == 0;
+counterB = 0;
 }
 
   Serial.println();
