@@ -43,6 +43,7 @@ void TargetBoardB(void);
 int dht11(void);
 void movement(int Distance1, int Distance2);
 void wifi(void);
+void TargetBoard(void);
 
 int counterA = 0;
 int counterB = 0;
@@ -77,6 +78,7 @@ void setup() {
 void loop() {
   int Distance1 = Ultrasonic1(EchoPin1, TrigPin1);
   int Distance2 = Ultrasonic2(EchoPin2, TrigPin2);
+  TargetBoard();
   movement(Distance1, Distance2);
   TargetBoardB();
   wifi();
