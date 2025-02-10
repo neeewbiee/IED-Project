@@ -39,4 +39,5 @@ void targetboards(int targetboardA, int targetboardB){
     while (targetboardB == 0){
       targetboardB = digitalRead(TargetB);
     }
+  }
 }
