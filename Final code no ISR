@@ -46,7 +46,7 @@ void TargetBoardB(void);
 int dht11(void);
 void movement(int Distance1, int Distance2);
 void wifi(void);
-void TargetBoard(void);
+void targetboards(int targetboardA, int targetboardB);
 
 int counterA = 0;
 int counterB = 0;
@@ -81,7 +81,9 @@ void setup() {
 void loop() {
   int Distance1 = Ultrasonic1(EchoPin1, TrigPin1);
   int Distance2 = Ultrasonic2(EchoPin2, TrigPin2);
-  TargetBoard();
+  int targetboardA = digitalRead(TargetA);
+  int targetboardB = digitalRead(TargetB);
+  targetboards(targetboardA, targetboardB);
   movement(Distance1, Distance2);
   TargetBoardB();
   wifi();
@@ -216,11 +218,19 @@ void TargetBoardB() {
   }
 }
 
-void TargetBoard() {
-  if (!digitalRead(4))
+void targetboards(int targetboardA, int targetboardB) {
+  if (targetboardA == 0){
     counterA++;
-  else if (!digitalRead(2))
+    while (targetboardA == 0){
+      targetboardA = digitalRead(TargetA);
+    }
+  }
+  if (targetboardB == 0){
     counterB++;
+    while (targetboardB == 0){
+      targetboardB = digitalRead(TargetB);
+    }
+  }
 }
 
 int dht11() {
