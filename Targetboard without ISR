@@ -20,6 +20,7 @@ Serial.print("A");
 if (counterB == 2) {
 Serial.print("B");
 }
+  Serial.println();
   Serial.print(counterA);
   Serial.print(counterB);
 }
@@ -27,11 +28,13 @@ Serial.print("B");
 void targetboards(int targetboardA, int targetboardB){
   if (targetboardA == 0){
     counterA++;
-while (targetboardA == 1)
+    while (targetboardA == 0){
+      targetboardA = digitalRead(4);
+    }
   }
   if (targetboardB == 0){
     counterB++;
-while (targetboardB == 1)
-  }
-
+    while (targetboardB == 0){
+      targetboardB = digitalRead(2);
+    }
 }
