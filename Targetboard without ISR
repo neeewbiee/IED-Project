@@ -4,7 +4,7 @@ int counterB = 0;
 
 void targetboards(int targetboardA, int targetboardB);
 
-void setup
+void setup() {
   Serial.begin(9600);
   pinMode(2, INPUT_PULLUP);
   pinMode(4, INPUT_PULLUP);
@@ -31,7 +31,7 @@ while (targetboardA == 1)
   }
   if (targetboardB == 0){
     counterB++;
-while (targetboardB)
+while (targetboardB == 1)
   }
 
 }
