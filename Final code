@@ -75,10 +75,10 @@ void loop() {
 }
 
 void move_forward() {
-  digitalWrite(motor_board_input_pin_IN2, LOW);
-  digitalWrite(motor_board_input_pin_IN1, HIGH);  //motor A lower forward speed
-  digitalWrite(motor_board_input_pin_IN3, LOW);
-  digitalWrite(motor_board_input_pin_IN4, HIGH);  // motor B higher reverse speed
+  analogWrite(motor_board_input_pin_IN2, LOW);
+  analogWrite(motor_board_input_pin_IN1, 100);  //motor A lower forward speed
+  analogWrite(motor_board_input_pin_IN3, LOW);
+  analogWrite(motor_board_input_pin_IN4, 100);  // motor B higher reverse speed
   delay(1000);
 }
 
@@ -91,10 +91,10 @@ void brake() {
 }
 
 void move_rev() {
-  digitalWrite(motor_board_input_pin_IN2, HIGH);
-  digitalWrite(motor_board_input_pin_IN1, LOW);  //motor A lower forward speed
-  digitalWrite(motor_board_input_pin_IN3, HIGH);
-  digitalWrite(motor_board_input_pin_IN4, LOW);  // motor B higher reverse speed
+  analogWrite(motor_board_input_pin_IN2, 100);
+  analogWrite(motor_board_input_pin_IN1, LOW);  //motor A lower forward speed
+  analogWrite(motor_board_input_pin_IN3, 100);
+  analogWrite(motor_board_input_pin_IN4, LOW);  // motor B higher reverse speed
   delay(1000);
 }
 
@@ -103,7 +103,7 @@ void Turn_left() {
   analogWrite(motor_board_input_pin_IN1, 90);  //motor A lower forward speed
   digitalWrite(motor_board_input_pin_IN3, LOW);
   analogWrite(motor_board_input_pin_IN4, 200);  // motor B higher reverse speed
-  delay(1000);
+  delay(500);
 }
 
 void Turn_right() {
@@ -111,7 +111,7 @@ void Turn_right() {
   analogWrite(motor_board_input_pin_IN1, 200);  //motor A higher forward speed
   digitalWrite(motor_board_input_pin_IN3, LOW);
   analogWrite(motor_board_input_pin_IN4, 90);  // motor B lower reverse speed
-  delay(1000);
+  delay(500);
 }
 
 int Ultrasonic1(int EchoPin, int TrigPin) {
@@ -223,15 +223,13 @@ int dht11() {
 
 void movement(int Distance1, int Distance2) {
   if (counterA == 0){
-    if (Distance1 < 50 && Distance2 > 50) {
+    if (Distance1 < 75 && Distance2 > 75) {
       brake();
       move_rev();
       Turn_left();
-  } else if (Distance2 < 50 && Distance1> 50) {
+  } else if (Distance2 < 75 && Distance1> 75) {
       brake();
-      move_forward();
-      Turn_left();
-  } else if (Distance1 < 50 && Distance2 < 50) {
+  } else if (Distance1 < 75 && Distance2 < 75) {
       brake();
       Turn_right();
   } else {
