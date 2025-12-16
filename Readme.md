@@ -103,6 +103,10 @@ This project demonstrated how basic robotics and sensors can be applied to suppo
 
 ---
 
+## Demo Video
+https://drive.google.com/file/d/1mHejnrdhH0yzjJ7VNtIsKPH9vrjTtYcs/view?usp=sharing
+---
+
 ## Module Information
 
 ET1015 / ET1024 – Introduction to Engineering & Design  
